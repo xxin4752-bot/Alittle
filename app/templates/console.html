@@ -11,41 +11,61 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Add Key Form -->
-        <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
-            <h3 class="text-lg font-bold mb-4 text-white flex items-center">
-                <svg class="w-5 h-5 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                添加新账户
-            </h3>
-            <form id="addKeyForm" class="space-y-4">
-                <div class="relative">
-                    <label class="block text-sm font-medium text-gray-300 mb-1">交易所</label>
-                    <select id="exchange" class="block w-full border-gray-600 rounded-md shadow-sm p-2.5 border bg-gray-700 text-white focus:ring-indigo-500 focus:border-indigo-500">
-                        <option value="binance">Binance</option>
-                        <option value="okx">OKX</option>
-                    </select>
+        <!-- Left Column: Add Forms -->
+        <div class="space-y-8">
+            <!-- Binance Form -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
+                <div class="flex items-center mb-4">
+                    <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" class="w-6 h-6 mr-2" alt="Binance">
+                    <h3 class="text-lg font-bold text-white">添加 Binance 账户</h3>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">API Key</label>
-                    <input type="text" id="api_key" placeholder="API Key" required class="block w-full border-gray-600 rounded-md shadow-sm p-2.5 border bg-gray-700 text-white placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                <form id="binanceForm" class="space-y-4">
+                    <input type="hidden" name="exchange_name" value="binance">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">API Key</label>
+                        <input type="text" name="api_key" placeholder="输入 Binance API Key" required class="block w-full border-gray-600 rounded-md shadow-sm p-2.5 border bg-gray-700 text-white placeholder-gray-400 focus:ring-yellow-500 focus:border-yellow-500 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Secret Key</label>
+                        <input type="text" name="secret_key" placeholder="输入 Binance Secret Key" required class="block w-full border-gray-600 rounded-md shadow-sm p-2.5 border bg-gray-700 text-white placeholder-gray-400 focus:ring-yellow-500 focus:border-yellow-500 text-sm">
+                    </div>
+                    <button type="submit" class="w-full bg-yellow-600 text-white py-2.5 rounded-md hover:bg-yellow-700 transition duration-150 ease-in-out font-medium shadow-sm flex justify-center items-center mt-2">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        添加 Binance 账户
+                    </button>
+                </form>
+            </div>
+
+            <!-- OKX Form -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
+                <div class="flex items-center mb-4">
+                    <div class="w-6 h-6 mr-2 bg-black border border-gray-500 rounded-full flex items-center justify-center text-[10px] font-bold text-white">OK</div>
+                    <h3 class="text-lg font-bold text-white">添加 OKX 账户</h3>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Secret Key</label>
-                    <input type="text" id="secret_key" placeholder="Secret Key" required class="block w-full border-gray-600 rounded-md shadow-sm p-2.5 border bg-gray-700 text-white placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
-                </div>
-                <div>
-                    <label id="passphrase-label" class="block text-sm font-medium text-gray-300 mb-1 hidden">Passphrase</label>
-                    <input type="password" id="passphrase" placeholder="Passphrase (OKX 必填)" class="block w-full border-gray-600 rounded-md shadow-sm p-2.5 border bg-gray-700 text-white placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 text-sm hidden">
-                </div>
-                <button type="submit" class="w-full bg-indigo-600 text-white py-2.5 rounded-md hover:bg-indigo-700 transition duration-150 ease-in-out font-medium shadow-sm flex justify-center items-center mt-6">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                    添加并测试连接
-                </button>
-            </form>
+                <form id="okxForm" class="space-y-4">
+                    <input type="hidden" name="exchange_name" value="okx">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">API Key</label>
+                        <input type="text" name="api_key" placeholder="输入 OKX API Key" required class="block w-full border-gray-600 rounded-md shadow-sm p-2.5 border bg-gray-700 text-white placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Secret Key</label>
+                        <input type="text" name="secret_key" placeholder="输入 OKX Secret Key" required class="block w-full border-gray-600 rounded-md shadow-sm p-2.5 border bg-gray-700 text-white placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Passphrase</label>
+                        <input type="password" name="passphrase" placeholder="输入 OKX Passphrase" required class="block w-full border-gray-600 rounded-md shadow-sm p-2.5 border bg-gray-700 text-white placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 text-white py-2.5 rounded-md hover:bg-indigo-700 transition duration-150 ease-in-out font-medium shadow-sm flex justify-center items-center mt-2">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        添加 OKX 账户
+                    </button>
+                </form>
+            </div>
         </div>
 
-        <!-- Existing Keys List -->
-        <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
+        <!-- Right Column: Existing Keys List -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700 h-fit">
             <h3 class="text-lg font-bold mb-4 text-white flex items-center">
                 <svg class="w-5 h-5 mr-2 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
                 已绑定账户
@@ -78,29 +98,46 @@
         'Content-Type': 'application/json'
     };
 
-    // --- Toggle Passphrase ---
-    const exchangeSelect = document.getElementById('exchange');
-    const passphraseInput = document.getElementById('passphrase');
-    const passphraseLabel = document.getElementById('passphrase-label');
+    // --- Keys Management ---
 
-    function togglePassphrase() {
-        if (exchangeSelect.value === 'okx') {
-            passphraseInput.classList.remove('hidden');
-            passphraseLabel.classList.remove('hidden');
-            passphraseInput.required = true;
-        } else {
-            passphraseInput.classList.add('hidden');
-            passphraseLabel.classList.add('hidden');
-            passphraseInput.required = false;
-            passphraseInput.value = '';
+    async function handleAddKey(e) {
+        e.preventDefault();
+        const form = e.target;
+        const btn = form.querySelector('button');
+        const originalText = btn.innerHTML;
+        
+        // Disable button
+        btn.disabled = true;
+        btn.textContent = '添加中...';
+
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        try {
+            const res = await fetch('/api/keys', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(data)
+            });
+            if (res.ok) {
+                form.reset();
+                loadKeys();
+                // Show success feedback if needed
+            } else {
+                const errorData = await res.json();
+                alert('添加失败: ' + (errorData.detail || 'Unknown error'));
+            }
+        } catch (e) {
+            console.error(e);
+            alert('网络错误');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
         }
     }
 
-    exchangeSelect.addEventListener('change', togglePassphrase);
-    window.addEventListener('DOMContentLoaded', togglePassphrase);
-    togglePassphrase();
-
-    // --- Keys Management ---
+    document.getElementById('binanceForm').addEventListener('submit', handleAddKey);
+    document.getElementById('okxForm').addEventListener('submit', handleAddKey);
 
     async function loadKeys() {
         const res = await fetch('/api/keys', { headers });
@@ -143,6 +180,8 @@
 
     async function checkKeyStatus(keyId) {
         const badge = document.querySelector(`#key-${keyId} .status-badge`);
+        if (!badge) return; // Guard clause
+        
         try {
             const res = await fetch(`/api/keys/${keyId}/status`, { headers });
             const data = await res.json();
@@ -160,40 +199,6 @@
             badge.innerHTML = `<span class="w-2 h-2 bg-red-400 rounded-full mr-1.5"></span>网络错误`;
         }
     }
-
-    document.getElementById('addKeyForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = e.target.querySelector('button');
-        const originalText = btn.innerHTML;
-        btn.disabled = true;
-        btn.textContent = '添加中...';
-
-        const exchange_name = document.getElementById('exchange').value;
-        const api_key = document.getElementById('api_key').value;
-        const secret_key = document.getElementById('secret_key').value;
-        const passphrase = document.getElementById('passphrase').value;
-
-        try {
-            const res = await fetch('/api/keys', {
-                method: 'POST',
-                headers,
-                body: JSON.stringify({ exchange_name, api_key, secret_key, passphrase })
-            });
-            if (res.ok) {
-                document.getElementById('addKeyForm').reset();
-                togglePassphrase(); // Reset visibility
-                loadKeys();
-            } else {
-                alert('添加失败');
-            }
-        } catch (e) {
-            console.error(e);
-            alert('网络错误');
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = originalText;
-        }
-    });
 
     document.getElementById('refreshStatusBtn').addEventListener('click', loadKeys);
 
