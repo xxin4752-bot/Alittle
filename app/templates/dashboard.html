@@ -269,29 +269,29 @@
             new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(okxBal);
             
         // Update Assets List
-        updateAssetsList('all-assets-list', details?.exchanges?.binance?.balances, details?.exchanges?.okx?.balances);
-        updateAssetsList('binance-assets-list', details?.exchanges?.binance?.balances);
-        updateAssetsList('okx-assets-list', null, details?.exchanges?.okx?.balances);
+        updateAssetsList('all-assets-list', details?.exchanges?.binance?.assets, details?.exchanges?.okx?.assets);
+        updateAssetsList('binance-assets-list', details?.exchanges?.binance?.assets);
+        updateAssetsList('okx-assets-list', null, details?.exchanges?.okx?.assets);
     }
 
-    function updateAssetsList(containerId, binanceBalances, okxBalances) {
+    function updateAssetsList(containerId, binanceAssets, okxAssets) {
         const container = document.getElementById(containerId);
         container.innerHTML = '';
         
         let allAssets = [];
         
-        if (binanceBalances) {
-            Object.entries(binanceBalances).forEach(([symbol, amount]) => {
-                if (parseFloat(amount) > 0) {
-                    allAssets.push({ symbol, amount, source: 'Binance' });
+        if (binanceAssets) {
+            Object.entries(binanceAssets).forEach(([symbol, info]) => {
+                if (info.amount > 0) {
+                    allAssets.push({ symbol, amount: info.amount, value: info.value_usd, source: 'Binance' });
                 }
             });
         }
         
-        if (okxBalances) {
-            Object.entries(okxBalances).forEach(([symbol, amount]) => {
-                if (parseFloat(amount) > 0) {
-                    allAssets.push({ symbol, amount, source: 'OKX' });
+        if (okxAssets) {
+            Object.entries(okxAssets).forEach(([symbol, info]) => {
+                if (info.amount > 0) {
+                    allAssets.push({ symbol, amount: info.amount, value: info.value_usd, source: 'OKX' });
                 }
             });
         }
@@ -312,7 +312,10 @@
                     <span class="font-bold text-gray-200">${asset.symbol}</span>
                     <span class="text-xs text-gray-400 block">${asset.source}</span>
                 </div>
-                <span class="font-mono text-gray-300">${parseFloat(asset.amount).toFixed(4)}</span>
+                <div class="text-right">
+                    <span class="font-mono text-gray-300 block">${parseFloat(asset.amount).toFixed(4)}</span>
+                    <span class="text-xs text-gray-500">≈ $${parseFloat(asset.value).toFixed(2)}</span>
+                </div>
             `;
             container.appendChild(div);
         });

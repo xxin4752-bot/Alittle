@@ -8,12 +8,21 @@ from datetime import timedelta
 import asyncio
 
 from app.database import engine, Base, get_db
-from app import models, schemas, crud, auth, crypto_service
+from app import models, schemas, crud, auth, crypto_service, scheduler as app_scheduler
+from contextlib import asynccontextmanager
 
 # Create tables
 Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup: Start scheduler
+    app_scheduler.start_scheduler()
+    yield
+    # Shutdown: Stop scheduler (optional, apscheduler handles this gracefully usually)
+    app_scheduler.scheduler.shutdown()
+
+app = FastAPI(lifespan=lifespan)
 
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
