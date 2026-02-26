@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Crypto Portfolio Tracker{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <a href="/" class="flex-shrink-0 flex items-center text-xl font-bold text-indigo-600">
+                        CryptoTracker
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/login" id="nav-login" class="text-gray-700 hover:text-indigo-600">登录</a>
+                    <a href="/register" id="nav-register" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">注册</a>
+                    <a href="/dashboard" id="nav-dashboard" class="hidden text-gray-700 hover:text-indigo-600 font-medium">仪表盘</a>
+                    <a href="/console" id="nav-console" class="hidden text-gray-700 hover:text-indigo-600 font-medium">控制台</a>
+                    <a href="#" id="nav-logout" class="hidden text-gray-700 hover:text-red-600">退出</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto px-4 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="container mx-auto text-center">
+            &copy; 2026 CryptoTracker. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Simple auth check
+        const token = localStorage.getItem('access_token');
+        const navLogin = document.getElementById('nav-login');
+        const navRegister = document.getElementById('nav-register');
+        const navDashboard = document.getElementById('nav-dashboard');
+        const navConsole = document.getElementById('nav-console');
+        const navLogout = document.getElementById('nav-logout');
+
+        if (token) {
+            navLogin.classList.add('hidden');
+            navRegister.classList.add('hidden');
+            navDashboard.classList.remove('hidden');
+            navConsole.classList.remove('hidden');
+            navLogout.classList.remove('hidden');
+        } else {
+            navLogin.classList.remove('hidden');
+            navRegister.classList.remove('hidden');
+            navDashboard.classList.add('hidden');
+            navConsole.classList.add('hidden');
+            navLogout.classList.add('hidden');
+        }
+
+        navLogout.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('access_token');
+            window.location.href = '/login';
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,400 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Top Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Total Balance Card -->
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg shadow-lg p-6 text-white transform hover:scale-105 transition duration-300">
+            <div class="flex justify-between items-start">
+                <div>
+                    <p class="text-indigo-100 text-sm font-medium">总净值 (USD)</p>
+                    <h2 id="total-balance" class="text-3xl font-bold mt-1">--</h2>
+                </div>
+                <div class="p-2 bg-white bg-opacity-20 rounded-full">
+                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+            </div>
+            <div class="mt-4 flex items-center text-sm text-indigo-100">
+                <button id="refreshBtn" class="flex items-center hover:text-white transition-colors underline">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    点击刷新数据
+                </button>
+            </div>
+        </div>
+
+        <!-- Binance Card -->
+        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-yellow-400">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-gray-500 text-sm font-medium">Binance</p>
+                    <h2 id="binance-balance" class="text-2xl font-bold text-gray-800 mt-1">--</h2>
+                </div>
+                <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png?v=026" class="w-8 h-8 opacity-80" alt="Binance">
+            </div>
+        </div>
+
+        <!-- OKX Card -->
+        <div class="bg-white rounded-lg shadow-md p-6 border-l-4 border-black">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-gray-500 text-sm font-medium">OKX</p>
+                    <h2 id="okx-balance" class="text-2xl font-bold text-gray-800 mt-1">--</h2>
+                </div>
+                <div class="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white font-bold text-xs">OKX</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-lg font-bold text-gray-800">历史净值曲线</h3>
+            <div class="flex space-x-2">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">Total</span>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">Binance</span>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">OKX</span>
+            </div>
+        </div>
+        <div class="relative h-72">
+            <canvas id="historyChart"></canvas>
+        </div>
+        </div>
+
+        <!-- Assets Distribution -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-bold mb-6 text-gray-800">持仓详情</h3>
+            
+            <div class="mb-4 border-b border-gray-200">
+                <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="assetsTab" data-tabs-toggle="#assetsTabContent" role="tablist">
+                    <li class="mr-2" role="presentation">
+                        <button class="inline-block p-4 rounded-t-lg border-b-2 border-indigo-600 text-indigo-600 active" id="all-tab" data-tabs-target="#all" type="button" role="tab">所有资产</button>
+                    </li>
+                    <li class="mr-2" role="presentation">
+                        <button class="inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300" id="binance-tab" data-tabs-target="#binance" type="button" role="tab">Binance</button>
+                    </li>
+                    <li class="mr-2" role="presentation">
+                        <button class="inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300" id="okx-tab" data-tabs-target="#okx" type="button" role="tab">OKX</button>
+                    </li>
+                </ul>
+            </div>
+            
+            <div id="assetsTabContent">
+                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="all" role="tabpanel">
+                    <div id="all-assets-list" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+                </div>
+                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="binance" role="tabpanel">
+                    <div id="binance-assets-list" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+                </div>
+                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="okx" role="tabpanel">
+                    <div id="okx-assets-list" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const token = localStorage.getItem('access_token');
+    if (!token) window.location.href = '/login';
+
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    };
+
+    // --- Tabs Logic ---
+    const tabs = ['all', 'binance', 'okx'];
+    tabs.forEach(tab => {
+        const btn = document.getElementById(`${tab}-tab`);
+        btn.addEventListener('click', () => {
+            tabs.forEach(t => {
+                document.getElementById(`${t}-tab`).classList.remove('border-indigo-600', 'text-indigo-600', 'active');
+                document.getElementById(`${t}-tab`).classList.add('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+                document.getElementById(t).classList.add('hidden');
+            });
+            btn.classList.add('border-indigo-600', 'text-indigo-600', 'active');
+            btn.classList.remove('border-transparent', 'hover:text-gray-600', 'hover:border-gray-300');
+            document.getElementById(tab).classList.remove('hidden');
+        });
+    });
+    // Activate first tab
+    document.getElementById('all-tab').click();
+
+
+    // --- Data Loading ---
+
+    async function loadKeys() {
+        const res = await fetch('/api/keys', { headers });
+        const keys = await res.json();
+        const container = document.getElementById('keys-list');
+        container.innerHTML = '';
+        if (keys.length === 0) {
+            container.innerHTML = '<p class="text-gray-500 text-sm italic">暂无绑定的账户</p>';
+        } else {
+            keys.forEach(k => {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center bg-gray-50 p-3 rounded-md border border-gray-100';
+                div.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="w-2 h-2 rounded-full ${k.exchange_name === 'binance' ? 'bg-yellow-400' : 'bg-black'} mr-2"></div>
+                        <span class="font-medium text-gray-700 capitalize">${k.exchange_name}</span>
+                    </div>
+                    <span class="text-xs text-gray-400 font-mono">...${k.api_key.slice(-4)}</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+        return keys.length > 0;
+    }
+
+    document.getElementById('addKeyForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.textContent = '添加中...';
+
+        const exchange_name = document.getElementById('exchange').value;
+        const api_key = document.getElementById('api_key').value;
+        const secret_key = document.getElementById('secret_key').value;
+        const passphrase = document.getElementById('passphrase').value;
+
+        try {
+            const res = await fetch('/api/keys', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ exchange_name, api_key, secret_key, passphrase })
+            });
+            if (res.ok) {
+                document.getElementById('addKeyForm').reset();
+                // Reset passphrase visibility
+                document.getElementById('passphrase').classList.add('hidden');
+                document.getElementById('passphrase').required = false;
+                
+                loadKeys();
+                // Trigger refresh immediately after adding key
+                triggerRefresh();
+            } else {
+                alert('添加失败');
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    });
+
+    // Load History Chart
+    let chartInstance = null;
+    async function loadHistory() {
+        const res = await fetch('/api/history', { headers });
+        const data = await res.json();
+        
+        // Data is newest first
+        const history = data.reverse();
+        
+        if (history.length === 0) return;
+
+        // Process datasets
+        const labels = history.map(h => new Date(h.timestamp).toLocaleDateString());
+        
+        const totalData = history.map(h => h.total_balance_usd);
+        const binanceData = history.map(h => {
+            if (h.details && h.details.exchanges && h.details.exchanges.binance) {
+                return h.details.exchanges.binance.total_usd;
+            }
+            return 0;
+        });
+        const okxData = history.map(h => {
+            if (h.details && h.details.exchanges && h.details.exchanges.okx) {
+                return h.details.exchanges.okx.total_usd;
+            }
+            return 0;
+        });
+
+        // Update latest state on page load from history if available
+        const latest = history[history.length - 1];
+        if (latest) {
+            updateDashboard(latest.total_balance_usd, latest.details);
+        }
+
+        const ctx = document.getElementById('historyChart').getContext('2d');
+        
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+
+        chartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Total',
+                        data: totalData,
+                        borderColor: 'rgb(79, 70, 229)', // Indigo
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Binance',
+                        data: binanceData,
+                        borderColor: 'rgb(250, 204, 21)', // Yellow
+                        backgroundColor: 'rgba(250, 204, 21, 0.0)',
+                        tension: 0.3,
+                        borderDash: [5, 5],
+                        fill: false
+                    },
+                    {
+                        label: 'OKX',
+                        data: okxData,
+                        borderColor: 'rgb(31, 41, 55)', // Gray/Black
+                        backgroundColor: 'rgba(31, 41, 55, 0.0)',
+                        tension: 0.3,
+                        borderDash: [2, 2],
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [2, 4] }
+                    }
+                }
+            }
+        });
+    }
+
+    // Refresh function needed for the button
+    async function triggerRefresh() {
+        const btn = document.getElementById('refreshBtn');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> 刷新中...`;
+        
+        try {
+            const res = await fetch('/api/refresh', { method: 'POST', headers });
+            if (res.ok) {
+                const data = await res.json();
+                updateDashboard(data.total_balance, data.details);
+                loadHistory(); 
+            } else {
+                alert('刷新失败，请检查 API Key');
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    }
+    
+    document.getElementById('refreshBtn').addEventListener('click', triggerRefresh);
+
+    // Helpers
+    function renderAssetCard(asset, info) {
+        return `
+            <div class="border border-gray-100 p-3 rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex justify-between items-center mb-1">
+                    <span class="font-bold text-gray-700">${asset}</span>
+                    <span class="text-xs text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">${info.amount.toFixed(4)}</span>
+                </div>
+                <div class="text-right font-medium text-indigo-600">$${info.value_usd.toFixed(2)}</div>
+            </div>
+        `;
+    }
+
+    function updateDashboard(totalBalance, details) {
+        // Update Total Balance
+        document.getElementById('total-balance').textContent = `$${totalBalance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+        // Check data structure (support old and new format)
+        let binanceTotal = 0;
+        let okxTotal = 0;
+        let binanceAssets = {};
+        let okxAssets = {};
+        let allAssets = {};
+
+        if (details.exchanges) {
+            // New structure
+            if (details.exchanges.binance) {
+                binanceTotal = details.exchanges.binance.total_usd;
+                binanceAssets = details.exchanges.binance.assets;
+            }
+            if (details.exchanges.okx) {
+                okxTotal = details.exchanges.okx.total_usd;
+                okxAssets = details.exchanges.okx.assets;
+            }
+            allAssets = details.assets_aggregation || {};
+        } else {
+            // Old structure fallback (flat dict)
+            allAssets = details; 
+        }
+
+        document.getElementById('binance-balance').textContent = `$${binanceTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        document.getElementById('okx-balance').textContent = `$${okxTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+        // Render Assets Lists
+        const renderList = (containerId, assets) => {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            if (Object.keys(assets).length === 0) {
+                container.innerHTML = '<p class="col-span-full text-center text-gray-400 py-4">无资产数据</p>';
+                return;
+            }
+            // Sort by value desc
+            const sorted = Object.entries(assets).sort(([,a], [,b]) => b.value_usd - a.value_usd);
+            
+            sorted.forEach(([asset, info]) => {
+                container.innerHTML += renderAssetCard(asset, info);
+            });
+        };
+
+        renderList('all-assets-list', allAssets);
+        renderList('binance-assets-list', binanceAssets);
+        renderList('okx-assets-list', okxAssets);
+    }
+
+    // Initial Load
+    (async () => {
+        // We don't need loadKeys() here anymore
+        // Always load history to show cached data
+        await loadHistory();
+    })();
+</script>
+{% endblock %}

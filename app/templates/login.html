@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold mb-6 text-center">用户登录</h2>
+    <form id="loginForm" class="space-y-4">
+        <div>
+            <label for="username" class="block text-sm font-medium text-gray-700">用户名</label>
+            <input type="text" id="username" name="username" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">密码</label>
+            <input type="password" id="password" name="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+        </div>
+        <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            登录
+        </button>
+    </form>
+    <div id="error" class="mt-4 text-red-600 text-sm hidden"></div>
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        
+        try {
+            const response = await fetch('/api/token', {
+                method: 'POST',
+                body: formData
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('access_token', data.access_token);
+                window.location.href = '/dashboard';
+            } else {
+                const error = await response.json();
+                document.getElementById('error').textContent = error.detail || '登录失败';
+                document.getElementById('error').classList.remove('hidden');
+            }
+        } catch (err) {
+            console.error(err);
+            document.getElementById('error').textContent = '网络错误';
+            document.getElementById('error').classList.remove('hidden');
+        }
+    });
+</script>
+{% endblock %}
