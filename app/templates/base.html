@@ -10,21 +10,21 @@
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
-    <nav class="bg-white shadow-md">
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col">
+    <nav class="bg-gray-800 shadow-md border-b border-gray-700">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex">
-                    <a href="/" class="flex-shrink-0 flex items-center text-xl font-bold text-indigo-600">
+                    <a href="/" class="flex-shrink-0 flex items-center text-xl font-bold text-indigo-400">
                         CryptoTracker
                     </a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="/login" id="nav-login" class="text-gray-700 hover:text-indigo-600">登录</a>
-                    <a href="/register" id="nav-register" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">注册</a>
-                    <a href="/dashboard" id="nav-dashboard" class="hidden text-gray-700 hover:text-indigo-600 font-medium">仪表盘</a>
-                    <a href="/console" id="nav-console" class="hidden text-gray-700 hover:text-indigo-600 font-medium">控制台</a>
-                    <a href="#" id="nav-logout" class="hidden text-gray-700 hover:text-red-600">退出</a>
+                    <a href="/login" id="nav-login" class="text-gray-300 hover:text-indigo-400 transition-colors">登录</a>
+                    <a href="/register" id="nav-register" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition-colors">注册</a>
+                    <a href="/dashboard" id="nav-dashboard" class="hidden text-gray-300 hover:text-indigo-400 font-medium transition-colors">仪表盘</a>
+                    <a href="/console" id="nav-console" class="hidden text-gray-300 hover:text-indigo-400 font-medium transition-colors">控制台</a>
+                    <a href="#" id="nav-logout" class="hidden text-gray-300 hover:text-red-400 transition-colors">退出</a>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-gray-800 text-white py-6">
+    <footer class="bg-gray-900 text-gray-500 py-6 border-t border-gray-800">
         <div class="container mx-auto text-center">
             &copy; 2026 CryptoTracker. All rights reserved.
         </div>
